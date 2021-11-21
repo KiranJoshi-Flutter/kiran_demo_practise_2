@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:kiran_demo_practise_2/screens/PostScreen.dart';
+import 'package:kiran_demo_practise_2/screens/about_us_screen.dart';
+import 'package:kiran_demo_practise_2/screens/contact_us_screen.dart';
 
 class Album {
   final int page;
@@ -103,9 +106,77 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
+                title: Text('Home'),
+              ),
+              ListTile(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PostScreen(),
+                    ),
+                  );
+                },
+                title: Text('Posts'),
+              ),
+              ListTile(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AboutUsScreen(),
+                    ),
+                  );
+                },
+                title: Text('About Us'),
+              ),
+              ListTile(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ContactUsScreen(),
+                    ),
+                  );
+                },
+                title: Text('Contact Us'),
               ),
             ],
           ),
+        ),
+      ),
+      body: Center(
+        child: FutureBuilder<Album>(
+          future: futureAlbum,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return GridView.builder(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                ),
+                itemCount: snapshot.data.datas.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      Image.network(
+                        '${snapshot.data.datas[index]['avatar']}',
+                        height: 100.0,
+                        width: 100.0,
+                        alignment: Alignment.topLeft,
+                      ),
+                      Text('${snapshot.data.datas[index]['first_name']}'),
+                      Text('${snapshot.data.datas[index]['email']}'),
+                    ],
+                  );
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.hasError}');
+            }
+            return CircularProgressIndicator();
+          },
         ),
       ),
     );
